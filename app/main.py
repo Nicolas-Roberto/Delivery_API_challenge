@@ -1,22 +1,15 @@
-from curses.panel import new_panel
-from enum import Enum
-from os import times
-from pipes import Template
-from random import choices
-from typing import Union
-from xmlrpc.client import boolean
-
 from fastapi import FastAPI, Query, Request
 import schemas
 import json
+import datetime 
 
 #valid state order, 1 to invalid and 0 to valid
 def validation(state:str, newState:str):
-    valid=1
-    if(state!="DELIVERED" and state!="CANCELED" and newState=="CANCELED"): valid=0
-    if(state=="RECEIVED" and newState=="CONFIRMED"): valid=0
-    if(state=="CONFIRMED" and newState=="DISPATCHED"): valid=0
-    if(state=="DISPATCHED" and newState=="DELIVERED"): valid=0
+    valid=False
+    if(state!="DELIVERED" and state!="CANCELED" and newState=="CANCELED"): valid=True
+    if(state=="RECEIVED" and newState=="CONFIRMED"): valid=True
+    if(state=="CONFIRMED" and newState=="DISPATCHED"): valid=True
+    if(state=="DISPATCHED" and newState=="DELIVERED"): valid=True
 
     return valid
 
@@ -43,9 +36,9 @@ def read_item(id_order:int):
         if item is None: continue
         if item["id"] == id_order:
             return item
-    return 
+    return "ID inválido!"
 
-#end point to create order
+#end point to create order 
 @app.post("/create")
 def create_order(order:schemas.Item):
     newId = pedidos["nextId"]
@@ -56,7 +49,7 @@ def create_order(order:schemas.Item):
                         "valor": order.valor,
                         "entregue": False,
                         "estado": "RECEIVED",
-                        "timestamp": order.timestamp}
+                        "timestamp": datetime.datetime.today()}
     pedidos["pedidos"].append(new_pedido)
     pedidos["nextId"] = newId+1
     
@@ -70,16 +63,17 @@ def update_order(id_order:int, order:schemas.Item):
     for i in range(size):
         if pedidos["pedidos"][i] is None: continue
         if pedidos["pedidos"][i]["id"] == id_order:
-            pedidos["pedidos"][i] = {
-                        "id": id_order,
-                        "cliente": order.cliente,
-                        "produto": order.produto,
-                        "valor": order.valor,
-                        "entregue": order.entrege,
-                        "estado": order.estado,
-                        "timestamp": order.timestamp}
-            return pedidos["pedidos"][i]
-    return 
+            if pedidos["pedidos"][i]["estado"] == "RECEIVED" or pedidos["pedidos"][i]["estado"] == "CONFIRMED":
+                pedidos["pedidos"][i] = {
+                            "id": id_order,
+                            "cliente": order.cliente,
+                            "produto": order.produto,
+                            "valor": order.valor,
+                            "entregue": False,
+                            "estado": "RECEIVED",
+                            "timestamp": datetime.datetime.today()}
+                return pedidos["pedidos"][i]
+    return "ID inválido!"
 
 #end point to change state order
 @app.put("/states/{id_order}")
@@ -88,11 +82,12 @@ def update_order(id_order:int, choice: str = Query("RECEIVED", enum=("RECEIVED",
     for i in range(size):
         if pedidos["pedidos"][i] is None: continue
         if pedidos["pedidos"][i]["id"] == id_order:
-            if(validation(pedidos["pedidos"][i]["estado"], choice)==0):
+            if(validation(pedidos["pedidos"][i]["estado"], choice)):
                 pedidos["pedidos"][i]["estado"] = choice
+                pedidos["pedidos"][i]["timestamp"] = datetime.datetime.today()
                 return pedidos["pedidos"][i]
 
-    return "Estado inválido!"
+    return "Estado ou ID inválido!"
 
 #end point to delete order
 @app.delete("/delete/{id_order}")
@@ -102,5 +97,5 @@ def delete_order(id_order:int):
         if pedidos["pedidos"][i] is None: continue
         if pedidos["pedidos"][i]["id"] == id_order:
             del pedidos["pedidos"][i]
-            return pedidos
-    return pedidos
+            return "Pedido " + id_order + "deletado."
+    return "ID inválido!"
