@@ -1,11 +1,25 @@
 from curses.panel import new_panel
+from enum import Enum
 from os import times
+from pipes import Template
+from random import choices
 from typing import Union
 from xmlrpc.client import boolean
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Query, Request
 import schemas
 import json
+
+#valid state order, 1 to invalid and 0 to valid
+def validation(state:str, newState:str):
+    valid=1
+    if(state!="DELIVERED" and state!="CANCELED" and newState=="CANCELED"): valid=0
+    if(state=="RECEIVED" and newState=="CONFIRMED"): valid=0
+    if(state=="CONFIRMED" and newState=="DISPATCHED"): valid=0
+    if(state=="DISPATCHED" and newState=="DELIVERED"): valid=0
+
+    return valid
+
 
 # open and save pedidos.json in padidos
 with open("pedidos.json", encoding='utf-8') as pedidos_json:
@@ -40,8 +54,8 @@ def create_order(order:schemas.Item):
                         "cliente": order.cliente,
                         "produto": order.produto,
                         "valor": order.valor,
-                        "entregue": order.entrege,
-                        "estado": order.estado,
+                        "entregue": False,
+                        "estado": "RECEIVED",
                         "timestamp": order.timestamp}
     pedidos["pedidos"].append(new_pedido)
     pedidos["nextId"] = newId+1
@@ -52,7 +66,7 @@ def create_order(order:schemas.Item):
 #end point to update a order
 @app.put("/update/{id_order}")
 def update_order(id_order:int, order:schemas.Item):
-    size = len(pedidos["pedidos"])
+    size = len(pedidos["pedidos"])  
     for i in range(size):
         if pedidos["pedidos"][i] is None: continue
         if pedidos["pedidos"][i]["id"] == id_order:
@@ -67,6 +81,18 @@ def update_order(id_order:int, order:schemas.Item):
             return pedidos["pedidos"][i]
     return 
 
+#end point to change state order
+@app.put("/states/{id_order}")
+def update_order(id_order:int, choice: str = Query("RECEIVED", enum=("RECEIVED","CONFIRMED","DISPATCHED","CANCELED","DELIVERED"))):
+    size = len(pedidos["pedidos"])  
+    for i in range(size):
+        if pedidos["pedidos"][i] is None: continue
+        if pedidos["pedidos"][i]["id"] == id_order:
+            if(validation(pedidos["pedidos"][i]["estado"], choice)==0):
+                pedidos["pedidos"][i]["estado"] = choice
+                return pedidos["pedidos"][i]
+
+    return "Estado inválido!"
 
 #end point to delete order
 @app.delete("/delete/{id_order}")

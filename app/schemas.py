@@ -5,6 +5,6 @@ class Item(BaseModel):
     cliente:str 
     produto:str 
     valor:float 
-    entrege:boolean 
-    estado:str
+    #entrege:boolean 
+    #estado:str
     timestamp:str
