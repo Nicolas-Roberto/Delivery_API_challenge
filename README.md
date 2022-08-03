@@ -9,14 +9,27 @@ Clone o repositório.
 $ git clone https://github.com/Nicolas-Roberto/Delivery_API_challenge.git
 ```
 
-Rode o docker
-```
-$ docker build -t myimage .
+Instale o python
 
-$ docker run -d --name  mycontainer -p 80:80 myimage
+Linux(Ubunto)
+```
+$ sudo apt update
+$ sudo apt install python3
 ```
 
-Vá para a pasta app
+Windows 10
+
+Baixe e instale a última versão do python
+```
+https://www.python.org/downloads/
+```
+
+Instale as dependencias
+```
+$ pip3 install -r requirements.txt
+```
+
+No diretório do projeto vá para a pasta app
 ```
 $ cd app
 ```
