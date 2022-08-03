@@ -85,6 +85,10 @@ def update_state_order(id_order:int, choice: str = Query("RECEIVED", enum=("RECE
             if(validation(pedidos["pedidos"][i]["estado"], choice)):
                 pedidos["pedidos"][i]["estado"] = choice
                 pedidos["pedidos"][i]["timestamp"] = datetime.datetime.today()
+                
+                if choice == "DELIVERED":
+                    pedidos["pedidos"][i]["entregue"]=True
+                
                 return pedidos["pedidos"][i]
 
     return "Estado ou ID inválido!"
