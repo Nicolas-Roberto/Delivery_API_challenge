@@ -29,8 +29,6 @@ http://127.0.0.1:8000/docs#/
 
 ## 🛠️ Construído com
 
-Mencione as ferramentas que você usou para criar seu projeto
-
 * [FastAPI](https://fastapi.tiangolo.com/) 
 * [pydantic](https://pydantic-docs.helpmanual.io/) 
 * [Uvicorn](https://www.uvicorn.org/) 
@@ -39,13 +37,13 @@ Mencione as ferramentas que você usou para criar seu projeto
 ## 📦 Desenvolvimento
 
 Os dados são armazenados em memória durante a execução
-da API e o funcionamento do sistema pode ser visto neste diagrama:
+da API, o funcionamento do sistema pode ser visto neste diagrama:
 
 *Diagrama da API*
 <img align="center" 
        src="docs/diagrams/API-diagrama.png"/>
 
-
+<br/>
 Além do CRUD, a máquina de estados foi implementada seguindo o seguinte diagrama.
 
 *Diagrama de estados*
