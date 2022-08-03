@@ -77,7 +77,7 @@ def update_order(id_order:int, order:schemas.Item):
 
 #end point to change state order
 @app.put("/states/{id_order}")
-def update_order(id_order:int, choice: str = Query("RECEIVED", enum=("RECEIVED","CONFIRMED","DISPATCHED","CANCELED","DELIVERED"))):
+def update_state_order(id_order:int, choice: str = Query("RECEIVED", enum=("RECEIVED","CONFIRMED","DISPATCHED","CANCELED","DELIVERED"))):
     size = len(pedidos["pedidos"])  
     for i in range(size):
         if pedidos["pedidos"][i] is None: continue
