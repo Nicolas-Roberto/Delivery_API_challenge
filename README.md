@@ -6,24 +6,30 @@ Essa é uma API chamada de "delivery-api" foi desenvolvida para o desafio do cbl
 
 Clone o repositório.
 ```
-git clone https://github.com/Nicolas-Roberto/Delivery_API_challenge.git
+$ git clone https://github.com/Nicolas-Roberto/Delivery_API_challenge.git
 ```
 
 Rode o docker
 ```
-docker build -t myimage .
+$ docker build -t myimage .
 
-docker run -d --name 
+$ docker run -d --name 
 
-mycontainer -p 80:80 myimage
+$ mycontainer -p 80:80 myimage
 ```
 
-Rode o programa 
+Vá para a pasta app
 ```
-cd app
+$ cd app
+```
 
-uvicorn main:app 
+Rode a main
+```
+$ uvicorn main:app 
+```
 
+Abra no navegador 
+```
 http://127.0.0.1:8000/docs#/
 ```
 
