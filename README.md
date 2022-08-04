@@ -6,15 +6,15 @@ Essa é uma API chamada de "delivery-api" foi desenvolvida para o desafio do cbl
 
 Clone o repositório.
 ```
-$ git clone https://github.com/Nicolas-Roberto/Delivery_API_challenge.git
+git clone https://github.com/Nicolas-Roberto/Delivery_API_challenge.git
 ```
 
 Instale o python
 
 Linux(Ubunto)
 ```
-$ sudo apt update
-$ sudo apt install python3
+sudo apt update
+sudo apt install python3
 ```
 
 Windows 10
@@ -26,17 +26,17 @@ https://www.python.org/downloads/
 
 Instale as dependencias
 ```
-$ pip3 install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 No diretório do projeto vá para a pasta app
 ```
-$ cd app
+cd app
 ```
 
 Rode a main
 ```
-$ uvicorn main:app 
+uvicorn main:app 
 ```
 
 Abra no navegador 
