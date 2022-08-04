@@ -11,7 +11,7 @@ git clone https://github.com/Nicolas-Roberto/Delivery_API_challenge.git
 
 Instale o python
 
-Linux(Ubunto)
+Linux(Ubuntu)
 ```
 sudo apt update
 sudo apt install python3
